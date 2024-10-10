@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statvify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #121212;
+            color: #ffffff;
+        }
+        h1 {
+            color: #1DB954;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+            font-size: 2.5em;
+        }
+        p {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #1DB954;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+            margin: 0 auto;
+            font-size: 1.2em;
+        }
+        .button:hover {
+            background-color: #1aa34a;
+            transform: scale(1.05);
+        }
+        #tables-container {
+            display: none; /* Ocultar las tablas inicialmente */
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            font-size: 16px;
+            background-color: #181818;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        th, td {
+            border: none;
+            padding: 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #1DB954;
+            color: #ffffff;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        tr:nth-child(even) {
+            background-color: #242424;
+        }
+        tr:hover {
+            background-color: #3a3a3a;
+            transform: scale(1.02);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bienvenido a Statvify</h1>
+    <p>Statvify es tu herramienta para analizar y visualizar tus hábitos de escucha musical. Carga tus archivos de historial de streaming y descubre estadísticas sobre tus artistas y canciones favoritas.</p>
+    <input type="file" id="file-input" multiple accept=".json" class="button" />
+    <button id="clear-data" class="button" style="display: none;">Borrar Información</button>
+    <div id="tables-container"></div>
+    <script>
+        async function loadAndDisplayData(files) {
+            const container = document.getElementById('tables-container');
+            container.style.display = 'block'; // Mostrar el contenedor de tablas
+            const globalStats = {};
+            const artistStats = {};
+
+            for (const file of files) {
+                const response = await file.text();
+                const data = JSON.parse(response);
+
+                data.forEach(item => {
+                    const trackKey = `${item.artistName} - ${item.trackName}`;
+                    if (!globalStats[trackKey]) {
+                        globalStats[trackKey] = {
+                            artistName: item.artistName,
+                            trackName: item.trackName,
+                            totalMsPlayed: 0
+                        };
+                    }
+                    globalStats[trackKey].totalMsPlayed += item.msPlayed;
+
+                    if (!artistStats[item.artistName]) {
+                        artistStats[item.artistName] = {
+                            totalMsPlayed: 0,
+                            songCount: 0
+                        };
+                    }
+                    artistStats[item.artistName].totalMsPlayed += item.msPlayed;
+                    artistStats[item.artistName].songCount += 1;
+                });
+            }
+
+            const sortedTracks = Object.values(globalStats).sort((a, b) => b.totalMsPlayed - a.totalMsPlayed);
+            const globalTable = document.createElement('table');
+            const globalTitle = document.createElement('h1');
+            globalTitle.textContent = 'Estadísticas Globales';
+            container.appendChild(globalTitle);
+            const headerRow = document.createElement('tr');
+            headerRow.innerHTML = '<th>Artista</th><th>Pista</th><th>Tiempo Total (minutos)</th><th>Tiempo Total (horas)</th>';
+            globalTable.appendChild(headerRow);
+
+            sortedTracks.forEach(track => {
+                const row = document.createElement('tr');
+                const totalMinutes = (track.totalMsPlayed / 60000).toFixed(2);
+                const totalHours = (track.totalMsPlayed / 3600000).toFixed(2);
+                row.innerHTML = `<td>${track.artistName}</td><td>${track.trackName}</td><td>${totalMinutes}</td><td>${totalHours}</td>`;
+                globalTable.appendChild(row);
+            });
+
+            container.appendChild(globalTable);
+
+            const mostListenedTable = document.createElement('table');
+            const mostListenedTitle = document.createElement('h1');
+            mostListenedTitle.textContent = 'Canciones Más Escuchadas';
+            container.appendChild(mostListenedTitle);
+            const mostListenedHeaderRow = document.createElement('tr');
+            mostListenedHeaderRow.innerHTML = '<th>Artista</th><th>Pista</th><th>Tiempo Total (minutos)</th><th>Tiempo Total (horas)</th>';
+            mostListenedTable.appendChild(mostListenedHeaderRow);
+
+            const mostListenedTracks = sortedTracks.slice(0, 10);
+            mostListenedTracks.forEach(track => {
+                const row = document.createElement('tr');
+                const totalMinutes = (track.totalMsPlayed / 60000).toFixed(2);
+                const totalHours = (track.totalMsPlayed / 3600000).toFixed(2);
+                row.innerHTML = `<td>${track.artistName}</td><td>${track.trackName}</td><td>${totalMinutes}</td><td>${totalHours}</td>`;
+                mostListenedTable.appendChild(row);
+            });
+
+            container.appendChild(mostListenedTable);
+
+            const sortedArtists = Object.entries(artistStats)
+                .map(([artistName, stats]) => ({
+                    artistName,
+                    totalMsPlayed: stats.totalMsPlayed,
+                    songCount: stats.songCount
+                }))
+                .filter(artist => artist.totalMsPlayed >= 60000)
+                .sort((a, b) => b.totalMsPlayed - a.totalMsPlayed);
+
+            const artistTable = document.createElement('table');
+            const artistTitle = document.createElement('h1');
+            artistTitle.textContent = 'Estadísticas por Artista';
+            container.appendChild(artistTitle);
+            const artistHeaderRow = document.createElement('tr');
+            artistHeaderRow.innerHTML = '<th>Artista</th><th>Tiempo Total (minutos)</th><th>Tiempo Total (horas)</th>';
+            artistTable.appendChild(artistHeaderRow);
+
+            sortedArtists.forEach(artist => {
+                const row = document.createElement('tr');
+                const totalMinutes = (artist.totalMsPlayed / 60000).toFixed(2);
+                const totalHours = (artist.totalMsPlayed / 3600000).toFixed(2);
+                row.innerHTML = `<td>${artist.artistName}</td><td>${totalMinutes}</td><td>${totalHours}</td>`;
+                artistTable.appendChild(row);
+            });
+
+            container.appendChild(artistTable);
+
+            const artistStatsTable = document.createElement('table');
+            const artistStatsTitle = document.createElement('h1');
+            artistStatsTitle.textContent = 'Estadísticas de Artistas';
+            container.appendChild(artistStatsTitle);
+            const artistStatsHeaderRow = document.createElement('tr');
+            artistStatsHeaderRow.innerHTML = '<th>Artista</th><th>Número de Canciones</th><th>Promedio de Tiempo por Canción (minutos)</th>';
+            artistStatsTable.appendChild(artistStatsHeaderRow);
+
+            sortedArtists.forEach(artist => {
+                const row = document.createElement('tr');
+                const averageMinutes = (artist.totalMsPlayed / artist.songCount / 60000).toFixed(2);
+                row.innerHTML = `<td>${artist.artistName}</td><td>${artist.songCount}</td><td>${averageMinutes}</td>`;
+                artistStatsTable.appendChild(row);
+            });
+
+            container.appendChild(artistStatsTable);
+
+            const mostSongsTable = document.createElement('table');
+            const mostSongsTitle = document.createElement('h1');
+            mostSongsTitle.textContent = 'Artistas con Más Canciones';
+            container.appendChild(mostSongsTitle);
+            const mostSongsHeaderRow = document.createElement('tr');
+            mostSongsHeaderRow.innerHTML = '<th>Artista</th><th>Número de Canciones</th>';
+            mostSongsTable.appendChild(mostSongsHeaderRow);
+
+            const mostSongsArtists = sortedArtists
+                .sort((a, b) => b.songCount - a.songCount)
+                .slice(0, 10);
+
+            mostSongsArtists.forEach(artist => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${artist.artistName}</td><td>${artist.songCount}</td>`;
+                mostSongsTable.appendChild(row);
+            });
+
+            container.appendChild(mostSongsTable);
+        }
+
+        window.onload = () => {
+            const storedFiles = JSON.parse(localStorage.getItem('uploadedFiles'));
+            if (storedFiles) {
+                const files = storedFiles.map(file => new File([file.content], file.name, { type: file.type }));
+                loadAndDisplayData(files);
+                document.getElementById('file-input').style.display = 'none'; // Ocultar el input de archivo
+                document.getElementById('clear-data').style.display = 'inline-block'; // Mostrar el botón de borrar
+            }
+        };
+
+        document.getElementById('file-input').addEventListener('change', (event) => {
+            const files = Array.from(event.target.files);
+            const fileContents = files.map(file => {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        resolve({ name: file.name, content: e.target.result, type: file.type });
+                    };
+                    reader.readAsText(file);
+                });
+            });
+
+            Promise.all(fileContents).then(contents => {
+                localStorage.setItem('uploadedFiles', JSON.stringify(contents));
+                loadAndDisplayData(files);
+            });
+        });
+
+        document.getElementById('clear-data').addEventListener('click', () => {
+            localStorage.removeItem('uploadedFiles'); // Borrar datos almacenados
+            document.getElementById('tables-container').innerHTML = ''; // Limpiar el contenedor de tablas
+            document.getElementById('file-input').style.display = 'inline-block'; // Mostrar el input de archivo
+            document.getElementById('clear-data').style.display = 'none'; // Ocultar el botón de borrar
+        });
+    </script>
+</body>
+</html>

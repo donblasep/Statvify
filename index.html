@@ -9,50 +9,101 @@
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             background-color: #121212;
             color: #ffffff;
+            scroll-behavior: smooth; /* Desplazamiento suave */
         }
         h1 {
             color: #1DB954;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             font-weight: 700;
-            font-size: 2em;
+            font-size: 2.5em;
+            opacity: 0; /* Inicialmente oculto para la animación */
+            transform: translateY(-20px); /* Desplazado hacia arriba */
+            animation: fadeInUp 0.5s forwards; /* Animación de entrada */
         }
-        table {
-            width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            font-size: 16px;
-            background-color: #181818;
-            border-radius: 8px;
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; /* Ocupa toda la altura de la ventana */
+            padding: 20px;
+            text-align: center;
+            background-color: #1e1e1e;
+            position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            opacity: 0; /* Inicialmente oculto para la animación */
+            transform: translateY(20px); /* Desplazado hacia abajo */
+            animation: fadeInUp 0.5s forwards; /* Animación de entrada */
+            animation-delay: 0.3s; /* Retraso para la animación */
         }
-        th, td {
-            border: none;
-            padding: 15px;
-            text-align: left;
+        .phone {
+            width: 300px;
+            background-color: #000;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
-        th {
-            background-color: #1DB954;
+        .screen {
+            flex: 1; /* Ocupa el espacio restante */
+            background: linear-gradient(to top, #1DB954, #181818);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .track-info {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .track-info h2 {
+            font-size: 1.5em;
+            margin: 0;
             color: #ffffff;
-            font-weight: 700;
-            text-transform: uppercase;
         }
-        tr:nth-child(even) {
-            background-color: #242424;
+        .track-info p {
+            font-size: 0.9em;
+            color: #ccc;
+            margin: 5px 0;
         }
-        tr:hover {
-            background-color: #3a3a3a;
-            transform: scale(1.02);
-            transition: background-color 0.3s, transform 0.3s;
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: auto;
+        }
+        .control-button {
+            width: 50px;
+            height: 50px;
+            background-color: #1DB954;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s; /* Transición suave */
+        }
+        .control-button:hover {
+            background-color: #1aa34a;
+            transform: scale(1.1); /* Aumentar tamaño al pasar el mouse */
         }
         .button {
             display: inline-block;
-            padding: 10px 20px;
-            margin: 20px auto;
+            padding: 15px 30px;
             background-color: #1DB954;
             color: #ffffff;
             border: none;
@@ -62,177 +113,179 @@
             text-decoration: none;
             font-weight: bold;
             transition: background-color 0.3s, transform 0.3s;
+            font-size: 1.2em;
+            margin-top: 20px;
         }
         .button:hover {
             background-color: #1aa34a;
             transform: scale(1.05);
         }
+        .scroll-indicator {
+            position: absolute;
+            bottom: 20px;
+            font-size: 1.2em;
+            color: #ffffff;
+            animation: bounce 1s infinite; /* Efecto de rebote */
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        .info-section {
+            padding: 40px 20px;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            text-align: center;
+            border-top: 2px solid #1DB954; /* Línea superior para separación */
+        }
+        .info-section h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            opacity: 0; /* Inicialmente oculto para la animación */
+            transform: translateY(-20px); /* Desplazado hacia arriba */
+            animation: fadeInUp 0.5s forwards; /* Animación de entrada */
+            animation-delay: 0.5s; /* Retraso para la animación */
+        }
+        .info-section p {
+            font-size: 1em;
+            margin: 10px 0;
+            max-width: 800px; /* Limitar el ancho del texto */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .card-container {
+            display: flex;
+            flex-wrap: wrap; /* Permitir que las tarjetas se envuelvan */
+            justify-content: center; /* Centrar las tarjetas */
+            margin: 20px 0; /* Espacio entre la sección y las tarjetas */
+        }
+        .card {
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+            width: 300px; /* Ancho fijo para las tarjetas */
+            opacity: 0; /* Inicialmente oculto para la animación */
+            transform: translateY(20px); /* Desplazado hacia abajo */
+            animation: fadeInUp 0.5s forwards; /* Animación de entrada */
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card h3 {
+            margin: 0 0 10px;
+            font-size: 1.5em;
+            color: #1DB954;
+        }
+        .card p {
+            margin: 0;
+            font-size: 1em;
+            color: #ccc;
+        }
+
+        /* Media Queries para diseño responsive */
+        @media (max-width: 768px) {
+            .card {
+                width: 90%; /* Ancho más pequeño en pantallas pequeñas */
+            }
+        }
+
+        @media (min-width: 769px) {
+            .card {
+                width: 300px; /* Ancho fijo para pantallas grandes */
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .card {
+                width: 350px; /* Ancho más grande en pantallas muy grandes */
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Statvify</h1>
-    <div id="tables-container"></div>
-    <input type="file" id="file-input" multiple accept=".json" />
-    <script>
-        async function loadAndDisplayData(files) {
-            const container = document.getElementById('tables-container');
-            const globalStats = {};
-            const artistStats = {};
+    <div class="section">
+        <h1>Bienvenido a Statvify</h1>
+        <h2>Paso 1: Comenzar</h2>
+        <p>Haz clic en el botón "Comenzar" para iniciar el proceso.</p>
+        
+        <div class="phone">
+            <div class="screen">
+                <div class="track-info">
+                    <h2>Top Albums</h2>
+                    <p>Los álbumes que más has escuchado</p>
+                </div>
+                <div class="controls">
+                    <button class="control-button">⏮️</button>
+                    <button class="control-button">▶️</button>
+                    <button class="control-button">⏭️</button>
+                </div>
+            </div>
+        </div>
 
-            for (const file of files) {
-                const response = await file.text();
-                const data = JSON.parse(response);
+        <a href="#step2" class="button">Comenzar</a>
+        <div class="scroll-indicator">⬇️ Desplázate hacia abajo</div>
+    </div>
 
-                data.forEach(item => {
-                    const trackKey = `${item.artistName} - ${item.trackName}`;
-                    if (!globalStats[trackKey]) {
-                        globalStats[trackKey] = {
-                            artistName: item.artistName,
-                            trackName: item.trackName,
-                            totalMsPlayed: 0
-                        };
-                    }
-                    globalStats[trackKey].totalMsPlayed += item.msPlayed;
+    <div class="section" id="step2">
+        <h2>Paso 2: Seleccionar Archivos</h2>
+        <p>Selecciona uno o más archivos de historial de streaming en formato JSON desde tu dispositivo.</p>
+        <a href="#step3" class="button">Siguiente</a>
+        <div class="scroll-indicator">⬇️ Desplázate hacia abajo</div>
+    </div>
 
-                    if (!artistStats[item.artistName]) {
-                        artistStats[item.artistName] = {
-                            totalMsPlayed: 0,
-                            songCount: 0
-                        };
-                    }
-                    artistStats[item.artistName].totalMsPlayed += item.msPlayed;
-                    artistStats[item.artistName].songCount += 1;
-                });
-            }
+    <div class="section" id="step3">
+        <h2>Paso 3: Autenticación de Spotify</h2>
+        <p>Inicia sesión en tu cuenta de Spotify para permitir el acceso a tus datos.</p>
+        <a href="#step4" class="button">Iniciar Sesión</a>
+        <div class="scroll-indicator">⬇️ Desplázate hacia abajo</div>
+    </div>
 
-            const sortedTracks = Object.values(globalStats).sort((a, b) => b.totalMsPlayed - a.totalMsPlayed);
-            const globalTable = document.createElement('table');
-            const globalTitle = document.createElement('h1');
-            globalTitle.textContent = 'Estadísticas Globales';
-            container.appendChild(globalTitle);
-            const headerRow = document.createElement('tr');
-            headerRow.innerHTML = '<th>Artista</th><th>Pista</th><th>Tiempo Total (minutos)</th><th>Tiempo Total (horas)</th>';
-            globalTable.appendChild(headerRow);
+    <div class="section" id="step4">
+        <h2>Paso 4: Solicitar Información</h2>
+        <p>Estamos solicitando tu historial de reproducción y datos de álbumes a Spotify.</p>
+        <a href="#step5" class="button">Continuar</a>
+        <div class="scroll-indicator">⬇️ Desplázate hacia abajo</div>
+    </div>
 
-            sortedTracks.forEach(track => {
-                const row = document.createElement('tr');
-                const totalMinutes = (track.totalMsPlayed / 60000).toFixed(2);
-                const totalHours = (track.totalMsPlayed / 3600000).toFixed(2);
-                row.innerHTML = `<td>${track.artistName}</td><td>${track.trackName}</td><td>${totalMinutes}</td><td>${totalHours}</td>`;
-                globalTable.appendChild(row);
-            });
+    <div class="section" id="step5">
+        <h2>Paso 5: Ver Resultados</h2>
+        <p>Una vez que los datos se hayan cargado, podrás ver tus estadísticas musicales.</p>
+        <a href="tables.html" class="button">Ver Resultados</a> <!-- Cambiado a tables.html -->
+        <div class="scroll-indicator">⬇️ Desplázate hacia abajo</div>
+    </div>
 
-            container.appendChild(globalTable);
-
-            const mostListenedTable = document.createElement('table');
-            const mostListenedTitle = document.createElement('h1');
-            mostListenedTitle.textContent = 'Canciones Más Escuchadas';
-            container.appendChild(mostListenedTitle);
-            const mostListenedHeaderRow = document.createElement('tr');
-            mostListenedHeaderRow.innerHTML = '<th>Artista</th><th>Pista</th><th>Tiempo Total (minutos)</th><th>Tiempo Total (horas)</th>';
-            mostListenedTable.appendChild(mostListenedHeaderRow);
-
-            const mostListenedTracks = sortedTracks.slice(0, 10);
-            mostListenedTracks.forEach(track => {
-                const row = document.createElement('tr');
-                const totalMinutes = (track.totalMsPlayed / 60000).toFixed(2);
-                const totalHours = (track.totalMsPlayed / 3600000).toFixed(2);
-                row.innerHTML = `<td>${track.artistName}</td><td>${track.trackName}</td><td>${totalMinutes}</td><td>${totalHours}</td>`;
-                mostListenedTable.appendChild(row);
-            });
-
-            container.appendChild(mostListenedTable);
-
-            const sortedArtists = Object.entries(artistStats)
-                .map(([artistName, stats]) => ({
-                    artistName,
-                    totalMsPlayed: stats.totalMsPlayed,
-                    songCount: stats.songCount
-                }))
-                .filter(artist => artist.totalMsPlayed >= 60000)
-                .sort((a, b) => b.totalMsPlayed - a.totalMsPlayed);
-
-            const artistTable = document.createElement('table');
-            const artistTitle = document.createElement('h1');
-            artistTitle.textContent = 'Estadísticas por Artista';
-            container.appendChild(artistTitle);
-            const artistHeaderRow = document.createElement('tr');
-            artistHeaderRow.innerHTML = '<th>Artista</th><th>Tiempo Total (minutos)</th><th>Tiempo Total (horas)</th>';
-            artistTable.appendChild(artistHeaderRow);
-
-            sortedArtists.forEach(artist => {
-                const row = document.createElement('tr');
-                const totalMinutes = (artist.totalMsPlayed / 60000).toFixed(2);
-                const totalHours = (artist.totalMsPlayed / 3600000).toFixed(2);
-                row.innerHTML = `<td>${artist.artistName}</td><td>${totalMinutes}</td><td>${totalHours}</td>`;
-                artistTable.appendChild(row);
-            });
-
-            container.appendChild(artistTable);
-
-            const artistStatsTable = document.createElement('table');
-            const artistStatsTitle = document.createElement('h1');
-            artistStatsTitle.textContent = 'Estadísticas de Artistas';
-            container.appendChild(artistStatsTitle);
-            const artistStatsHeaderRow = document.createElement('tr');
-            artistStatsHeaderRow.innerHTML = '<th>Artista</th><th>Número de Canciones</th><th>Promedio de Tiempo por Canción (minutos)</th>';
-            artistStatsTable.appendChild(artistStatsHeaderRow);
-
-            sortedArtists.forEach(artist => {
-                const row = document.createElement('tr');
-                const averageMinutes = (artist.totalMsPlayed / artist.songCount / 60000).toFixed(2);
-                row.innerHTML = `<td>${artist.artistName}</td><td>${artist.songCount}</td><td>${averageMinutes}</td>`;
-                artistStatsTable.appendChild(row);
-            });
-
-            container.appendChild(artistStatsTable);
-
-            const mostSongsTable = document.createElement('table');
-            const mostSongsTitle = document.createElement('h1');
-            mostSongsTitle.textContent = 'Artistas con Más Canciones';
-            container.appendChild(mostSongsTitle);
-            const mostSongsHeaderRow = document.createElement('tr');
-            mostSongsHeaderRow.innerHTML = '<th>Artista</th><th>Número de Canciones</th>';
-            mostSongsTable.appendChild(mostSongsHeaderRow);
-
-            const mostSongsArtists = sortedArtists
-                .sort((a, b) => b.songCount - a.songCount)
-                .slice(0, 10);
-
-            mostSongsArtists.forEach(artist => {
-                const row = document.createElement('tr');
-                row.innerHTML = `<td>${artist.artistName}</td><td>${artist.songCount}</td>`;
-                mostSongsTable.appendChild(row);
-            });
-
-            container.appendChild(mostSongsTable);
-        }
-
-        window.onload = () => {
-            const storedFiles = JSON.parse(localStorage.getItem('uploadedFiles'));
-            if (storedFiles) {
-                const files = storedFiles.map(file => new File([file.content], file.name, { type: file.type }));
-                loadAndDisplayData(files);
-            }
-        };
-
-        document.getElementById('file-input').addEventListener('change', (event) => {
-            const files = Array.from(event.target.files);
-            const fileContents = files.map(file => {
-                return new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        resolve({ name: file.name, content: e.target.result, type: file.type });
-                    };
-                    reader.readAsText(file);
-                });
-            });
-
-            Promise.all(fileContents).then(contents => {
-                localStorage.setItem('uploadedFiles', JSON.stringify(contents));
-                loadAndDisplayData(files);
-            });
-        });
-    </script>
+    <div class="info-section" id="info">
+        <h2>Cambia la forma en que ves tu música</h2>
+        <p>Statvify te muestra todo lo que necesitas saber sobre tu historial de streaming, hasta la última escucha.</p>
+        <p>¿Ya tienes tu historial de streaming?</p>
+        <p>Importa el archivo .zip que obtuviste de Spotify y comienza a explorar tu escucha.</p>
+        <h2>¿Cómo funciona?</h2>
+        <p>Spotify te permite exportar un registro de cada vez que has reproducido una canción. Es increíble. Pero es un archivo largo y difícil de entender, ¡eso es lo que Statvify ayuda a resolver!</p>
+        
+        <div class="card-container">
+            <div class="card">
+                <h3>Visualiza tus estadísticas</h3>
+                <p>Obtén una representación clara y concisa de tus hábitos de escucha.</p>
+            </div>
+            <div class="card">
+                <h3>Explora tus álbumes</h3>
+                <p>Descubre cuáles son los álbumes que más has escuchado y disfruta de tus favoritos.</p>
+            </div>
+            <div class="card">
+                <h3>Descubre patrones</h3>
+                <p>Analiza tus hábitos de escucha y encuentra patrones en tu música.</p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
