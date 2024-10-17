@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Statvify</title>
+    <title>Statvify - Tu Música, Tu Historia</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -12,280 +12,146 @@
             padding: 0;
             background-color: #121212;
             color: #ffffff;
-            scroll-behavior: smooth; /* Desplazamiento suave */
+            scroll-behavior: smooth;
         }
-        h1 {
-            color: #1DB954;
+        header {
+            background-color: #1DB954;
+            color: white;
+            padding: 20px;
             text-align: center;
-            margin-bottom: 20px;
-            font-weight: 700;
-            font-size: 2.5em;
-            opacity: 0; /* Inicialmente oculto para la animación */
-            transform: translateY(-20px); /* Desplazado hacia arriba */
-            animation: fadeInUp 0.5s forwards; /* Animación de entrada */
-        }
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
         .section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh; /* Ocupa toda la altura de la ventana */
-            padding: 20px;
-            text-align: center;
-            background-color: #1e1e1e;
-            position: relative;
-            overflow: hidden;
-            opacity: 0; /* Inicialmente oculto para la animación */
-            transform: translateY(20px); /* Desplazado hacia abajo */
-            animation: fadeInUp 0.5s forwards; /* Animación de entrada */
-            animation-delay: 0.3s; /* Retraso para la animación */
+            padding: 60px 20px;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            max-width: 800px;
         }
-        .phone {
-            width: 300px;
-            background-color: #000;
-            border-radius: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            position: relative;
-            overflow: hidden;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .section:nth-child(odd) {
+            background-color: #282828;
         }
-        .screen {
-            flex: 1; /* Ocupa el espacio restante */
-            background: linear-gradient(to top, #1DB954, #181818);
-            border-radius: 15px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        .section:nth-child(even) {
+            background-color: #1c1c1c;
         }
-        .track-info {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .track-info h2 {
-            font-size: 1.5em;
-            margin: 0;
-            color: #ffffff;
-        }
-        .track-info p {
-            font-size: 0.9em;
-            color: #ccc;
-            margin: 5px 0;
-        }
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            margin-top: auto;
-        }
-        .control-button {
-            width: 50px;
-            height: 50px;
-            background-color: #1DB954;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s; /* Transición suave */
-        }
-        .control-button:hover {
-            background-color: #1aa34a;
-            transform: scale(1.1); /* Aumentar tamaño al pasar el mouse */
+        h1, h2 {
+            margin: 0 0 20px;
         }
         .button {
             display: inline-block;
             padding: 15px 30px;
             background-color: #1DB954;
-            color: #ffffff;
+            color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            text-align: center;
             text-decoration: none;
             font-weight: bold;
-            transition: background-color 0.3s, transform 0.3s;
-            font-size: 1.2em;
-            margin-top: 20px;
+            transition: background-color 0.3s;
         }
         .button:hover {
             background-color: #1aa34a;
-            transform: scale(1.05);
         }
-        .scroll-indicator {
-            position: absolute;
-            bottom: 20px;
-            font-size: 1.2em;
-            color: #ffffff;
-            animation: bounce 1s infinite; /* Efecto de rebote */
+        .counter {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1DB954;
         }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-10px);
-            }
-            60% {
-                transform: translateY(-5px);
-            }
-        }
-        .info-section {
-            padding: 40px 20px;
-            background-color: #1e1e1e;
-            color: #ffffff;
+        footer {
             text-align: center;
-            border-top: 2px solid #1DB954; /* Línea superior para separación */
-        }
-        .info-section h2 {
-            font-size: 2em;
-            margin-bottom: 20px;
-            opacity: 0; /* Inicialmente oculto para la animación */
-            transform: translateY(-20px); /* Desplazado hacia arriba */
-            animation: fadeInUp 0.5s forwards; /* Animación de entrada */
-            animation-delay: 0.5s; /* Retraso para la animación */
-        }
-        .info-section p {
-            font-size: 1em;
-            margin: 10px 0;
-            max-width: 800px; /* Limitar el ancho del texto */
-            margin-left: auto;
-            margin-right: auto;
+            padding: 20px;
+            background-color: #1DB954;
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
         }
         .card-container {
             display: flex;
-            flex-wrap: wrap; /* Permitir que las tarjetas se envuelvan */
-            justify-content: center; /* Centrar las tarjetas */
-            margin: 20px 0; /* Espacio entre la sección y las tarjetas */
+            justify-content: space-around;
+            flex-wrap: wrap;
         }
         .card {
-            background-color: #2a2a2a;
+            background-color: #282828;
             border-radius: 10px;
             padding: 20px;
-            margin: 15px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s;
-            width: 300px; /* Ancho fijo para las tarjetas */
-            opacity: 0; /* Inicialmente oculto para la animación */
-            transform: translateY(20px); /* Desplazado hacia abajo */
-            animation: fadeInUp 0.5s forwards; /* Animación de entrada */
+            margin: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            width: calc(30% - 20px);
         }
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        .card h3 {
-            margin: 0 0 10px;
-            font-size: 1.5em;
-            color: #1DB954;
-        }
-        .card p {
-            margin: 0;
-            font-size: 1em;
-            color: #ccc;
-        }
-
-        /* Media Queries para diseño responsive */
+        /* Media Queries para Responsividad */
         @media (max-width: 768px) {
             .card {
-                width: 90%; /* Ancho más pequeño en pantallas pequeñas */
-            }
-        }
-
-        @media (min-width: 769px) {
-            .card {
-                width: 300px; /* Ancho fijo para pantallas grandes */
-            }
-        }
-
-        @media (min-width: 1200px) {
-            .card {
-                width: 350px; /* Ancho más grande en pantallas muy grandes */
+                width: calc(100% - 20px);
             }
         }
     </style>
 </head>
 <body>
-    <div class="section">
+    <header>
         <h1>Bienvenido a Statvify</h1>
-        <h2>Paso 1: Comenzar</h2>
-        <p>Haz clic en el botón "Comenzar" para iniciar el proceso.</p>
-        
-        <div class="phone">
-            <div class="screen">
-                <div class="track-info">
-                    <h2>Top Albums</h2>
-                    <p>Los álbumes que más has escuchado</p>
-                </div>
-                <div class="controls">
-                    <button class="control-button">⏮️</button>
-                    <button class="control-button">▶️</button>
-                    <button class="control-button">⏭️</button>
-                </div>
-            </div>
-        </div>
+        <p>Tu música, tu historia</p>
+    </header>
 
-        <a href="#step2" class="button">Comenzar</a>
-        <div class="scroll-indicator">⬇️ Desplázate hacia abajo</div>
+    <div class="section">
+        <h2>Privacidad y Estadísticas Personalizadas</h2>
+        <p>Priorizamos la privacidad y seguridad. Solo almacenamos los datos que necesitamos para brindarte una experiencia mágica.</p>
     </div>
 
-    <div class="section" id="step2">
-        <h2>Paso 2: Seleccionar Archivos</h2>
-        <p>Selecciona uno o más archivos de historial de streaming en formato JSON desde tu dispositivo.</p>
-        <a href="#step3" class="button">Siguiente</a>
-        <div class="scroll-indicator">⬇️ Desplázate hacia abajo</div>
+    <div class="section">
+        <h2>Contador de Usuarios</h2>
+        <p>Únete a nuestra comunidad de usuarios satisfechos:</p>
+        <div class="counter">20,921,273</div>
     </div>
 
-    <div class="section" id="step3">
-        <h2>Paso 3: Autenticación de Spotify</h2>
-        <p>Inicia sesión en tu cuenta de Spotify para permitir el acceso a tus datos.</p>
-        <a href="#step4" class="button">Iniciar Sesión</a>
-        <div class="scroll-indicator">⬇️ Desplázate hacia abajo</div>
+    <div class="section">
+        <h2>Principales pistas, artistas y álbumes a simple vista</h2>
+        <p>Muchos usuarios disfrutan revisando sus listas principales aquí; es una experiencia mágica.</p>
     </div>
 
-    <div class="section" id="step4">
-        <h2>Paso 4: Solicitar Información</h2>
-        <p>Estamos solicitando tu historial de reproducción y datos de álbumes a Spotify.</p>
-        <a href="#step5" class="button">Continuar</a>
-        <div class="scroll-indicator">⬇️ Desplázate hacia abajo</div>
+    <div class="section">
+        <h2>Importa tu historial de por vida</h2>
+        <p>Aprovecha nuestro proceso de importación único para traer tu historial completo de streaming.</p>
     </div>
 
-    <div class="section" id="step5">
-        <h2>Paso 5: Ver Resultados</h2>
+    <div class="section">
+        <h2>Control total sobre tus datos</h2>
+        <p>Tú decides qué datos compartes y cómo se utilizan. Tu privacidad es nuestra prioridad.</p>
+    </div>
+
+    <div class="section">
+        <h2>Ver Resultados</h2>
         <p>Una vez que los datos se hayan cargado, podrás ver tus estadísticas musicales.</p>
-        <a href="tables.html" class="button">Ver Resultados</a> <!-- Cambiado a tables.html -->
-        <div class="scroll-indicator">⬇️ Desplázate hacia abajo</div>
+        <a href="tables.html" class="button">Ver Resultados</a>
     </div>
 
-    <div class="info-section" id="info">
-        <h2>Cambia la forma en que ves tu música</h2>
-        <p>Statvify te muestra todo lo que necesitas saber sobre tu historial de streaming, hasta la última escucha.</p>
-        <p>¿Ya tienes tu historial de streaming?</p>
-        <p>Importa el archivo .zip que obtuviste de Spotify y comienza a explorar tu escucha.</p>
-        <h2>¿Cómo funciona?</h2>
-        <p>Spotify te permite exportar un registro de cada vez que has reproducido una canción. Es increíble. Pero es un archivo largo y difícil de entender, ¡eso es lo que Statvify ayuda a resolver!</p>
-        
+    <div class="section">
+        <h2>Pasos para Comenzar</h2>
         <div class="card-container">
             <div class="card">
-                <h3>Visualiza tus estadísticas</h3>
-                <p>Obtén una representación clara y concisa de tus hábitos de escucha.</p>
+                <h3>Paso 1</h3>
+                <p>Haz clic en el botón "Comenzar" para iniciar el proceso.</p>
             </div>
             <div class="card">
-                <h3>Explora tus álbumes</h3>
-                <p>Descubre cuáles son los álbumes que más has escuchado y disfruta de tus favoritos.</p>
+                <h3>Paso 2</h3>
+                <p>Selecciona uno o más archivos de historial de streaming en formato JSON.</p>
             </div>
             <div class="card">
-                <h3>Descubre patrones</h3>
-                <p>Analiza tus hábitos de escucha y encuentra patrones en tu música.</p>
+                <h3>Paso 3</h3>
+                <p>Inicia sesión en tu cuenta de Spotify para permitir el acceso a tus datos.</p>
+            </div>
+            <div class="card">
+                <h3>Paso 4</h3>
+                <p>Estamos solicitando tu historial de reproducción y datos de álbumes a Spotify.</p>
+            </div>
+            <div class="card">
+                <h3>Paso 5</h3>
+                <p>Una vez que los datos se hayan cargado, podrás ver tus estadísticas musicales.</p>
             </div>
         </div>
     </div>
+
+    <footer>
+        <p>&copy; 2024 Statvify.</p>
+    </footer>
 </body>
 </html>

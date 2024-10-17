@@ -76,17 +76,87 @@
             transform: scale(1.02);
             transition: background-color 0.3s, transform 0.3s;
         }
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px dotted #FFF;
+            border-radius: 50%;
+            display: inline-block;
+            position: relative;
+            box-sizing: border-box;
+            animation: rotation 2s linear infinite;
+            margin: 0 auto; /* Centrar el loader */
+        }
+
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        nav {
+            text-align: center; /* Centrar el menú */
+            margin-bottom: 20px; /* Espacio debajo del menú */
+        }
+        nav ul {
+            list-style-type: none; /* Quitar los puntos de la lista */
+            padding: 0; /* Quitar el padding */
+            display: flex; /* Usar flexbox para el diseño */
+            flex-wrap: wrap; /* Permitir que los elementos se envuelvan */
+            justify-content: center; /* Centrar los elementos */
+        }
+        nav ul li {
+            margin: 0 15px; /* Espacio entre los elementos del menú */
+        }
+        nav ul li a {
+            text-decoration: none; /* Quitar el subrayado */
+            color: #1DB954; /* Color del texto */
+            font-weight: bold; /* Negrita */
+            transition: color 0.3s; /* Transición suave para el color */
+        }
+        nav ul li a:hover {
+            color: #ffffff; /* Cambiar color al pasar el mouse */
+        }
+
+        @media (max-width: 600px) {
+            nav ul {
+                flex-direction: column; /* Cambiar a columna en pantallas pequeñas */
+            }
+            nav ul li {
+                margin: 10px 0; /* Espacio vertical entre elementos */
+            }
+        }
     </style>
 </head>
 <body>
     <h1>Bienvenido a Statvify</h1>
     <p>Statvify es tu herramienta para analizar y visualizar tus hábitos de escucha musical. Carga tus archivos de historial de streaming y descubre estadísticas sobre tus artistas y canciones favoritas.</p>
+    
+    <!-- Menú de navegación -->
+    <nav>
+        <ul>
+            <li><a href="#global-stats">Estadísticas Globales</a></li>
+            <li><a href="#most-listened">Canciones Más Escuchadas</a></li>
+            <li><a href="#artist-stats">Estadísticas por Artista</a></li>
+            <li><a href="#artist-stats-details">Estadísticas de Artistas</a></li>
+            <li><a href="#most-songs">Artistas con Más Canciones</a></li>
+        </ul>
+    </nav>
+
     <input type="file" id="file-input" multiple accept=".json" class="button" />
     <button id="clear-data" class="button" style="display: none;">Borrar Información</button>
+    <div id="loading" style="display: none;">
+        <div class="loader"></div> <!-- Spinner de carga -->
+        <p>Cargando...</p> <!-- Texto de carga -->
+    </div> <!-- Elemento de carga -->
     <div id="tables-container"></div>
     <script>
         async function loadAndDisplayData(files) {
             const container = document.getElementById('tables-container');
+            const loading = document.getElementById('loading');
+            loading.style.display = 'block'; // Mostrar el elemento de carga
             container.style.display = 'block'; // Mostrar el contenedor de tablas
             const globalStats = {};
             const artistStats = {};
@@ -120,6 +190,7 @@
             const sortedTracks = Object.values(globalStats).sort((a, b) => b.totalMsPlayed - a.totalMsPlayed);
             const globalTable = document.createElement('table');
             const globalTitle = document.createElement('h1');
+            globalTitle.id = 'global-stats'; // ID para el enlace
             globalTitle.textContent = 'Estadísticas Globales';
             container.appendChild(globalTitle);
             const headerRow = document.createElement('tr');
@@ -138,6 +209,7 @@
 
             const mostListenedTable = document.createElement('table');
             const mostListenedTitle = document.createElement('h1');
+            mostListenedTitle.id = 'most-listened'; // ID para el enlace
             mostListenedTitle.textContent = 'Canciones Más Escuchadas';
             container.appendChild(mostListenedTitle);
             const mostListenedHeaderRow = document.createElement('tr');
@@ -166,6 +238,7 @@
 
             const artistTable = document.createElement('table');
             const artistTitle = document.createElement('h1');
+            artistTitle.id = 'artist-stats'; // ID para el enlace
             artistTitle.textContent = 'Estadísticas por Artista';
             container.appendChild(artistTitle);
             const artistHeaderRow = document.createElement('tr');
@@ -184,6 +257,7 @@
 
             const artistStatsTable = document.createElement('table');
             const artistStatsTitle = document.createElement('h1');
+            artistStatsTitle.id = 'artist-stats-details'; // ID para el enlace
             artistStatsTitle.textContent = 'Estadísticas de Artistas';
             container.appendChild(artistStatsTitle);
             const artistStatsHeaderRow = document.createElement('tr');
@@ -201,6 +275,7 @@
 
             const mostSongsTable = document.createElement('table');
             const mostSongsTitle = document.createElement('h1');
+            mostSongsTitle.id = 'most-songs'; // ID para el enlace
             mostSongsTitle.textContent = 'Artistas con Más Canciones';
             container.appendChild(mostSongsTitle);
             const mostSongsHeaderRow = document.createElement('tr');
@@ -218,6 +293,8 @@
             });
 
             container.appendChild(mostSongsTable);
+
+            loading.style.display = 'none'; // Ocultar el elemento de carga al finalizar
         }
 
         window.onload = () => {
