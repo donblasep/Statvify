@@ -320,6 +320,15 @@
             });
 
             Promise.all(fileContents).then(contents => {
+                // Verificar el tamaño total de los archivos
+                const totalSize = contents.reduce((acc, file) => acc + file.content.length, 0);
+                const currentSize = localStorage.getItem('uploadedFiles') ? JSON.parse(localStorage.getItem('uploadedFiles')).reduce((acc, file) => acc + file.content.length, 0) : 0;
+
+                // Limpiar el almacenamiento si el nuevo tamaño excede el límite
+                if (currentSize + totalSize > 5 * 1024 * 1024) { // 5 MB
+                    localStorage.removeItem('uploadedFiles'); // Limpiar almacenamiento
+                }
+
                 localStorage.setItem('uploadedFiles', JSON.stringify(contents));
                 loadAndDisplayData(files);
             });
