@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statvify</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
@@ -13,20 +20,23 @@
             background-color: #121212;
             color: #ffffff;
         }
+
         h1 {
             color: #1DB954;
             text-align: center;
-            margin-bottom: 30px;
+            margin: 30px 0 5px 0;
             font-weight: 700;
             font-size: 2.5em;
         }
+
         p {
             text-align: center;
             font-size: 1.2em;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
+
         .button {
-            display: inline-block;
+            display: block;
             padding: 10px 20px;
             background-color: #1DB954;
             color: #ffffff;
@@ -39,14 +49,27 @@
             transition: background-color 0.3s, transform 0.3s;
             margin: 0 auto;
             font-size: 1.2em;
+            padding: 10px 20px 10px 20px;
+            font-size: 1.2em;
+
+            @media (max-width: 768px) {
+                padding: 8px 16px;
+                font-size: 1em;
+                width: 90%;
+                max-width: 300px;
+            }
         }
+
         .button:hover {
             background-color: #1aa34a;
             transform: scale(1.05);
         }
+
         #tables-container {
-            display: none; /* Ocultar las tablas inicialmente */
+            display: none;
+            /* Ocultar las tablas inicialmente */
         }
+
         table {
             width: 80%;
             margin: 20px auto;
@@ -57,25 +80,31 @@
             overflow: hidden;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
-        th, td {
+
+        th,
+        td {
             border: none;
             padding: 15px;
             text-align: left;
         }
+
         th {
             background-color: #1DB954;
             color: #ffffff;
             font-weight: 700;
             text-transform: uppercase;
         }
+
         tr:nth-child(even) {
             background-color: #242424;
         }
+
         tr:hover {
             background-color: #3a3a3a;
             transform: scale(1.02);
             transition: background-color 0.3s, transform 0.3s;
         }
+
         .loader {
             width: 48px;
             height: 48px;
@@ -85,62 +114,86 @@
             position: relative;
             box-sizing: border-box;
             animation: rotation 2s linear infinite;
-            margin: 0 auto; /* Centrar el loader */
+            margin: 0 auto;
+            /* Centrar el loader */
         }
 
         @keyframes rotation {
             0% {
                 transform: rotate(0deg);
             }
+
             100% {
                 transform: rotate(360deg);
             }
         }
+
         nav {
-            text-align: center; /* Centrar el menú */
-            margin-bottom: 20px; /* Espacio debajo del menú */
+            text-align: center;
+            /* Centrar el menú */
+            margin-bottom: 20px;
+            /* Espacio debajo del menú */
         }
+
         nav ul {
-            list-style-type: none; /* Quitar los puntos de la lista */
-            padding: 0; /* Quitar el padding */
-            display: flex; /* Usar flexbox para el diseño */
-            flex-wrap: wrap; /* Permitir que los elementos se envuelvan */
-            justify-content: center; /* Centrar los elementos */
+            list-style-type: none;
+            /* Quitar los puntos de la lista */
+            padding: 0;
+            /* Quitar el padding */
+            display: flex;
+            /* Usar flexbox para el diseño */
+            flex-wrap: wrap;
+            /* Permitir que los elementos se envuelvan */
+            justify-content: center;
+            /* Centrar los elementos */
         }
+
         nav ul li {
-            margin: 0 15px; /* Espacio entre los elementos del menú */
+            margin: 0 15px;
+            /* Espacio entre los elementos del menú */
         }
+
         nav ul li a {
-            text-decoration: none; /* Quitar el subrayado */
-            color: #1DB954; /* Color del texto */
-            font-weight: bold; /* Negrita */
-            transition: color 0.3s; /* Transición suave para el color */
+            text-decoration: none;
+            /* Quitar el subrayado */
+            color: #1DB954;
+            /* Color del texto */
+            font-weight: bold;
+            /* Negrita */
+            transition: color 0.3s;
+            /* Transición suave para el color */
         }
+
         nav ul li a:hover {
-            color: #ffffff; /* Cambiar color al pasar el mouse */
+            color: #ffffff;
+            /* Cambiar color al pasar el mouse */
         }
 
         @media (max-width: 600px) {
             nav ul {
-                flex-direction: column; /* Cambiar a columna en pantallas pequeñas */
+                flex-direction: column;
+                /* Cambiar a columna en pantallas pequeñas */
             }
+
             nav ul li {
-                margin: 10px 0; /* Espacio vertical entre elementos */
+                margin: 10px 0;
+                /* Espacio vertical entre elementos */
             }
         }
     </style>
 </head>
+
 <body>
     <h1>Bienvenido a Statvify</h1>
-    <p>Statvify es tu herramienta para analizar y visualizar tus hábitos de escucha musical. Carga tus archivos de historial de streaming y descubre estadísticas sobre tus artistas y canciones favoritas.</p>
-    
+    <p>Statvify es tu herramienta para analizar y visualizar tus hábitos de escucha musical. Carga tus archivos de
+        historial de streaming y descubre estadísticas sobre tus artistas y canciones favoritas.</p>
+
     <!-- Menú de navegación -->
     <nav>
         <ul>
             <li><a href="#global-stats">Estadísticas Globales</a></li>
             <li><a href="#most-listened">Canciones Más Escuchadas</a></li>
             <li><a href="#artist-stats">Estadísticas por Artista</a></li>
-            <li><a href="#artist-stats-details">Estadísticas de Artistas</a></li>
             <li><a href="#most-songs">Artistas con Más Canciones</a></li>
         </ul>
     </nav>
@@ -153,6 +206,13 @@
     </div> <!-- Elemento de carga -->
     <div id="tables-container"></div>
     <script>
+        let sortedTracks = []; // Definido en un ámbito más amplio
+        let mostListenedTracks = []; // Definido en un ámbito más amplio
+        let globalOffset = 50; // Offset para la tabla global
+        let mostListenedOffset = 50; // Offset para la tabla de canciones más escuchadas
+        let artistOffset = 50; // Offset para la tabla de artistas
+        let globalTable; // Declare globalTable at a higher scope
+
         async function loadAndDisplayData(files) {
             const container = document.getElementById('tables-container');
             const loading = document.getElementById('loading');
@@ -160,6 +220,8 @@
             container.style.display = 'block'; // Mostrar el contenedor de tablas
             const globalStats = {};
             const artistStats = {};
+
+            globalTable = document.createElement('table'); // Initialize globalTable
 
             for (const file of files) {
                 const response = await file.text();
@@ -187,21 +249,28 @@
                 });
             }
 
-            const sortedTracks = Object.values(globalStats).sort((a, b) => b.totalMsPlayed - a.totalMsPlayed);
-            const globalTable = document.createElement('table');
+            sortedTracks = Object.values(globalStats)
+                .filter(track => (track.totalMsPlayed / 60000) >= 60)
+                .sort((a, b) => b.totalMsPlayed - a.totalMsPlayed);
             const globalTitle = document.createElement('h1');
             globalTitle.id = 'global-stats'; // ID para el enlace
             globalTitle.textContent = 'Estadísticas Globales';
             container.appendChild(globalTitle);
+
+            // Añadir descripción para Estadísticas Globales
+            const globalDescription = document.createElement('p');
+            globalDescription.textContent = 'Aquí puedes ver un resumen de tus hábitos de escucha musical a nivel global.';
+            container.appendChild(globalDescription);
+
             const headerRow = document.createElement('tr');
-            headerRow.innerHTML = '<th>Artista</th><th>Pista</th><th>Tiempo Total (minutos)</th><th>Tiempo Total (horas)</th>';
+            headerRow.innerHTML = '<th>ID</th><th>Artista</th><th>Pista</th><th>Tiempo Total (minutos)</th><th>Tiempo Total (horas)</th>';
             globalTable.appendChild(headerRow);
 
-            sortedTracks.forEach(track => {
+            sortedTracks.forEach((track, index) => {
                 const row = document.createElement('tr');
                 const totalMinutes = (track.totalMsPlayed / 60000).toFixed(2);
                 const totalHours = (track.totalMsPlayed / 3600000).toFixed(2);
-                row.innerHTML = `<td>${track.artistName}</td><td>${track.trackName}</td><td>${totalMinutes}</td><td>${totalHours}</td>`;
+                row.innerHTML = `<td>${index + 1}</td><td>${track.artistName}</td><td>${track.trackName}</td><td>${totalMinutes}</td><td>${totalHours}</td>`;
                 globalTable.appendChild(row);
             });
 
@@ -212,16 +281,22 @@
             mostListenedTitle.id = 'most-listened'; // ID para el enlace
             mostListenedTitle.textContent = 'Canciones Más Escuchadas';
             container.appendChild(mostListenedTitle);
+
+            // Añadir descripción para Canciones Más Escuchadas
+            const mostListenedDescription = document.createElement('p');
+            mostListenedDescription.textContent = 'Descubre las canciones que más has escuchado en tu historial.';
+            container.appendChild(mostListenedDescription);
+
             const mostListenedHeaderRow = document.createElement('tr');
-            mostListenedHeaderRow.innerHTML = '<th>Artista</th><th>Pista</th><th>Tiempo Total (minutos)</th><th>Tiempo Total (horas)</th>';
+            mostListenedHeaderRow.innerHTML = '<th>ID</th><th>Artista</th><th>Pista</th><th>Tiempo Total (minutos)</th><th>Tiempo Total (horas)</th>';
             mostListenedTable.appendChild(mostListenedHeaderRow);
 
-            const mostListenedTracks = sortedTracks.slice(0, 10);
-            mostListenedTracks.forEach(track => {
+            mostListenedTracks = sortedTracks.slice(0, 50);
+            mostListenedTracks.forEach((track, index) => {
                 const row = document.createElement('tr');
                 const totalMinutes = (track.totalMsPlayed / 60000).toFixed(2);
                 const totalHours = (track.totalMsPlayed / 3600000).toFixed(2);
-                row.innerHTML = `<td>${track.artistName}</td><td>${track.trackName}</td><td>${totalMinutes}</td><td>${totalHours}</td>`;
+                row.innerHTML = `<td>${index + 1}</td><td>${track.artistName}</td><td>${track.trackName}</td><td>${totalMinutes}</td><td>${totalHours}</td>`;
                 mostListenedTable.appendChild(row);
             });
 
@@ -241,54 +316,48 @@
             artistTitle.id = 'artist-stats'; // ID para el enlace
             artistTitle.textContent = 'Estadísticas por Artista';
             container.appendChild(artistTitle);
+
+            // Añadir descripción para Estadísticas por Artista
+            const artistDescription = document.createElement('p');
+            artistDescription.textContent = 'Aquí puedes ver artistas más escuchados. (mínimo 1 hora de escucha)';
+            container.appendChild(artistDescription);
+
             const artistHeaderRow = document.createElement('tr');
-            artistHeaderRow.innerHTML = '<th>Artista</th><th>Tiempo Total (minutos)</th><th>Tiempo Total (horas)</th>';
+            artistHeaderRow.innerHTML = '<th>ID</th><th>Artista</th><th>Tiempo Total (minutos)</th><th>Tiempo Total (horas)</th>';
             artistTable.appendChild(artistHeaderRow);
 
-            sortedArtists.forEach(artist => {
+            sortedArtists.slice(0, 50).forEach((artist, index) => {
                 const row = document.createElement('tr');
                 const totalMinutes = (artist.totalMsPlayed / 60000).toFixed(2);
                 const totalHours = (artist.totalMsPlayed / 3600000).toFixed(2);
-                row.innerHTML = `<td>${artist.artistName}</td><td>${totalMinutes}</td><td>${totalHours}</td>`;
+                row.innerHTML = `<td>${index + 1}</td><td>${artist.artistName}</td><td>${totalMinutes}</td><td>${totalHours}</td>`;
                 artistTable.appendChild(row);
             });
 
             container.appendChild(artistTable);
-
-            const artistStatsTable = document.createElement('table');
-            const artistStatsTitle = document.createElement('h1');
-            artistStatsTitle.id = 'artist-stats-details'; // ID para el enlace
-            artistStatsTitle.textContent = 'Estadísticas de Artistas';
-            container.appendChild(artistStatsTitle);
-            const artistStatsHeaderRow = document.createElement('tr');
-            artistStatsHeaderRow.innerHTML = '<th>Artista</th><th>Número de Canciones</th><th>Promedio de Tiempo por Canción (minutos)</th>';
-            artistStatsTable.appendChild(artistStatsHeaderRow);
-
-            sortedArtists.forEach(artist => {
-                const row = document.createElement('tr');
-                const averageMinutes = (artist.totalMsPlayed / artist.songCount / 60000).toFixed(2);
-                row.innerHTML = `<td>${artist.artistName}</td><td>${artist.songCount}</td><td>${averageMinutes}</td>`;
-                artistStatsTable.appendChild(row);
-            });
-
-            container.appendChild(artistStatsTable);
 
             const mostSongsTable = document.createElement('table');
             const mostSongsTitle = document.createElement('h1');
             mostSongsTitle.id = 'most-songs'; // ID para el enlace
             mostSongsTitle.textContent = 'Artistas con Más Canciones';
             container.appendChild(mostSongsTitle);
+
+            // Añadir descripción para Artistas con Más Canciones
+            const mostSongsDescription = document.createElement('p');
+            mostSongsDescription.textContent = 'Conoce a los artistas que tienen más canciones en tu historial.';
+            container.appendChild(mostSongsDescription);
+
             const mostSongsHeaderRow = document.createElement('tr');
-            mostSongsHeaderRow.innerHTML = '<th>Artista</th><th>Número de Canciones</th>';
+            mostSongsHeaderRow.innerHTML = '<th>ID</th><th>Artista</th><th>Número de Canciones</th>';
             mostSongsTable.appendChild(mostSongsHeaderRow);
 
             const mostSongsArtists = sortedArtists
                 .sort((a, b) => b.songCount - a.songCount)
-                .slice(0, 10);
+                .slice(0, 50);
 
-            mostSongsArtists.forEach(artist => {
+            mostSongsArtists.forEach((artist, index) => {
                 const row = document.createElement('tr');
-                row.innerHTML = `<td>${artist.artistName}</td><td>${artist.songCount}</td>`;
+                row.innerHTML = `<td>${index + 1}</td><td>${artist.artistName}</td><td>${artist.songCount}</td>`;
                 mostSongsTable.appendChild(row);
             });
 
@@ -297,49 +366,17 @@
             loading.style.display = 'none'; // Ocultar el elemento de carga al finalizar
         }
 
-        window.onload = () => {
-            const storedFiles = JSON.parse(localStorage.getItem('uploadedFiles'));
-            if (storedFiles) {
-                const files = storedFiles.map(file => new File([file.content], file.name, { type: file.type }));
-                loadAndDisplayData(files);
-                document.getElementById('file-input').style.display = 'none'; // Ocultar el input de archivo
-                document.getElementById('clear-data').style.display = 'inline-block'; // Mostrar el botón de borrar
-            }
-        };
-
         document.getElementById('file-input').addEventListener('change', (event) => {
             const files = Array.from(event.target.files);
-            const fileContents = files.map(file => {
-                return new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        resolve({ name: file.name, content: e.target.result, type: file.type });
-                    };
-                    reader.readAsText(file);
-                });
-            });
-
-            Promise.all(fileContents).then(contents => {
-                // Verificar el tamaño total de los archivos
-                const totalSize = contents.reduce((acc, file) => acc + file.content.length, 0);
-                const currentSize = localStorage.getItem('uploadedFiles') ? JSON.parse(localStorage.getItem('uploadedFiles')).reduce((acc, file) => acc + file.content.length, 0) : 0;
-
-                // Limpiar el almacenamiento si el nuevo tamaño excede el límite
-                if (currentSize + totalSize > 5 * 1024 * 1024) { // 5 MB
-                    localStorage.removeItem('uploadedFiles'); // Limpiar almacenamiento
-                }
-
-                localStorage.setItem('uploadedFiles', JSON.stringify(contents));
-                loadAndDisplayData(files);
-            });
+            loadAndDisplayData(files);
         });
 
         document.getElementById('clear-data').addEventListener('click', () => {
-            localStorage.removeItem('uploadedFiles'); // Borrar datos almacenados
             document.getElementById('tables-container').innerHTML = ''; // Limpiar el contenedor de tablas
             document.getElementById('file-input').style.display = 'inline-block'; // Mostrar el input de archivo
             document.getElementById('clear-data').style.display = 'none'; // Ocultar el botón de borrar
         });
     </script>
 </body>
+
 </html>
