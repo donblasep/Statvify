@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Top 5 Álbumes</title>
+    <style>
+        body {
+            text-align: center;
+            background-color: #222;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        #albums-container {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .album {
+            display: flex;
+            flex-direction: column;
+            margin: 10px;
+            text-align: center;
+            max-width: 120px;
+            flex: 1 1 auto;
+        }
+
+        .album img {
+            width: 100%;
+            height: auto;
+        }
+
+        canvas {
+            width: 100%;
+            height: auto;
+            max-width: 400px;
+        }
+
+        @media (max-width: 600px) {
+            .album {
+                max-width: 80px;
+            }
+
+            canvas {
+                width: 80%;
+            }
+        }
+
+        button {
+            display: block;
+            margin: 1rem auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Top 5 Álbumes</h1>
+    <div id="albums-container"></div>
+    <canvas id="wrappedCanvas" width="720" height="1280"></canvas>
+    <button onclick="downloadCanvas()">Descargar Imagen</button>
+    <button onclick="shareCanvas()">Compartir</button>
+
+
+    <script>
+
+
+        const gradients = [
+            {
+                start: '#1DB954', // Verde de Spotify
+                end: '#191414', // Oscuro de Spotify
+                textColor: '#FFFFFF' // Blanco para el texto
+            },
+            {
+                start: '#FF4B2B', // Rojo anaranjado
+                end: '#FF416C', // Rojo rosado
+                textColor: '#FFFFFF' // Blanco para el texto
+            },
+            {
+                start: '#1CB5E0', // Azul celeste
+                end: '#000000', // Negro
+                textColor: '#FFFFFF' // Blanco para el texto
+            },
+            {
+                start: '#0A0A0A', // Negro oscuro
+                end: '#7F8C8D', // Gris
+                textColor: '#FFFFFF' // Blanco para el texto
+            },
+            {
+                start: '#F1C40F', // Amarillo
+                end: '#E67E22', // Naranja
+                textColor: '#000000' // Negro para el texto
+            }
+        ];
+
+        const albumPositions = {
+            1: { x: 125, y: 330 },
+            2: { x: 275, y: 200 },
+            3: { x: 305, y: 350 },
+            4: { x: 145, y: 490 },
+            5: { x: 315, y: 530 },
+            6: { x: 155, y: 670 },
+            7: { x: 175, y: 820 },
+            8: { x: 325, y: 700 }
+        };
+
+        async function fetchTopAlbums() {
+            try {
+                const response = await fetch('/top-albums');
+                if (!response.ok) {
+                    throw new Error('No se pudo obtener los álbumes');
+                }
+
+                const albums = await response.json();
+                const container = document.getElementById('albums-container');
+                container.innerHTML = '';
+
+                albums.forEach((album, index) => {
+                    const albumElement = document.createElement('div');
+                    albumElement.classList.add('album');
+                    albumElement.innerHTML = `
+                        <img src="${album.cover}" alt="${album.name}" loading="lazy">
+                        <div class="album-name">${album.name}</div>
+                        <div class="artist-name">${album.artists}</div>
+                    `;
+                    container.appendChild(albumElement);
+                });
+
+                drawWrappedCanvas(albums);
+            } catch (error) {
+                console.error('Error al obtener los álbumes:', error);
+            }
+        }
+
+        function drawWrappedCanvas(albums) {
+            const canvas = document.getElementById('wrappedCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Elegir un gradiente aleatorio de la lista
+            const randomGradient = gradients[Math.floor(Math.random() * gradients.length)];
+
+            // Crear el gradiente
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, randomGradient.start);
+            gradient.addColorStop(1, randomGradient.end);
+
+            // Aplicar el gradiente al fondo
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Título principal
+            ctx.fillStyle = randomGradient.textColor;
+            ctx.font = 'bold 60px Monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('Tus clásicos', canvas.width / 2, 150);
+
+            const albumSize = 250;
+            const margin = 40; // Margen adicional 
+
+            // Dibujar los álbumes con posiciones fijas
+            albums.forEach((album, index) => {
+                const position = albumPositions[index + 1];
+                if (position) {
+                    const { x, y } = position;
+
+                    // Crear un nuevo objeto Image para cada álbum
+                    const img = new Image();
+                    img.crossOrigin = 'Anonymous'; // Habilitar CORS
+                    img.src = album.cover;
+
+                    img.onload = () => {
+                        // Una vez que la imagen se haya cargado, dibujarla en el canvas
+                        ctx.drawImage(
+                            img,
+                            x + margin,
+                            y + margin,
+                            albumSize - margin,
+                            albumSize - margin
+                        );
+                    };
+                }
+            });
+
+            let marginText = 50;
+            // Texto en el pie del canvas con la URL
+            ctx.fillStyle = randomGradient.textColor;
+            ctx.font = 'bold italic 32px Monospace';
+            ctx.textAlign = 'right'; // Alineación a la derecha
+            ctx.fillText('donblasep.com', canvas.width - marginText, canvas.height - marginText);
+        }
+
+
+        // Función para descargar el canvas como imagen
+        function downloadCanvas() {
+            const canvas = document.getElementById('wrappedCanvas');
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = '8vinyl-2024.png';
+            link.click();
+        }
+
+        window.onload = fetchTopAlbums;
+
+
+        let isSharing = false;  // Variable para controlar el estado de compartir
+
+        function shareCanvas() {
+            if (isSharing) {
+                console.log('Ya se está compartiendo, por favor espera.');
+                return;  // Evita ejecutar más de una vez
+            }
+
+            isSharing = true;  // Marca el inicio del proceso de compartir
+
+            const canvas = document.getElementById('wrappedCanvas');
+            const imageUrl = canvas.toDataURL('image/png');
+
+            if (navigator.canShare && navigator.canShare({ files: [new File([imageUrl], 'wrapped-2024.png', { type: 'image/png' })] })) {
+                navigator.share({
+                    title: 'Tus clásicos de Spotify',
+                    text: 'Mira mis álbums favoritos!',
+                    files: [new File([imageUrl], 'wrapped-2024.png', { type: 'image/png' })],
+                }).then(() => {
+                    console.log('¡Contenido compartido!');
+                    isSharing = false;  // Marca el fin del proceso de compartir
+                }).catch((error) => {
+                    console.error('Error al compartir:', error);
+                    isSharing = false;  // Marca el fin del proceso de compartir en caso de error
+                });
+            } else {
+                alert('El compartir no es soportado en tu dispositivo.');
+                isSharing = false;  // Marca el fin del proceso de compartir si no es compatible
+            }
+        }
+
+
+    </script>
+</body>
+
+</html>
