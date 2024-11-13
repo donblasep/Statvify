@@ -7,7 +7,12 @@ const cookieParser = require('cookie-parser');
 
 dotenv.config();
 
-const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, REDIRECT_URI, PORT } = process.env;
+const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, PORT } = process.env;
+
+// Configurar la URI de redirección según el entorno
+const REDIRECT_URI = process.env.NODE_ENV === 'production'
+    ? 'https://tu-vercel-deployment.vercel.app/callback'
+    : process.env.REDIRECT_URI;
 
 const app = express();
 app.use(cookieParser());
@@ -35,7 +40,7 @@ app.get('/callback', async (req, res) => {
         });
 
         const accessToken = tokenResponse.data.access_token;
-        
+
         // Guardar el token en una cookie HTTP-Only
         res.cookie('spotify_token', accessToken, {
             httpOnly: true,
@@ -94,6 +99,10 @@ app.get('/top-albums', async (req, res) => {
 
 app.get('/8vinyl', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'vinylfive.html'));
+});
+
+app.get('/', (req, res) => {
+    res.redirect('/login');
 });
 
 const port = PORT || 3000;
