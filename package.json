@@ -8,6 +8,6 @@
   },
   "scripts": {
     "start": "NODE_ENV=production node server.js",
-    "dev": "NODE_ENV=development node server.js"
+    "dev": "vercel dev"
   }
 }
