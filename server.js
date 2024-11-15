@@ -48,7 +48,9 @@ app.get('/callback', async (req, res) => {
             maxAge: 3600000, // 1 hora
         });
 
-        res.redirect('/8vinyl');
+        const port = PORT || 3000;
+        const baseUrl = req.hostname === 'localhost' ? `http://localhost:${port}` : `https://${req.hostname}`;
+        res.redirect(`${baseUrl}/8vinyl`);
     } catch (error) {
         console.error('Error obteniendo el token:', error.message);
         res.status(500).send('Error al obtener el token');
@@ -102,7 +104,9 @@ app.get('/8vinyl', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.redirect('/login');
+    const port = PORT || 3000;
+    const baseUrl = req.hostname === 'localhost' ? `http://localhost:${port}` : `https://${req.hostname}`;
+    res.redirect(`${baseUrl}/login`);
 });
 
 const port = PORT || 3000;
