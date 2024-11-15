@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statvify - Tu Música, Tu Historia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1f1f1f;
+            --second-color: #2f2f2f;
+            --accent-color: #1db954;
+            --text-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            scroll-behavior: smooth;
+            transition: background-color 0.3s;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .cols {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 7rem;
+        }
+
+        .col {
+            flex: 1;
+            margin: 10px;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .col h3 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .col ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .col ul li {
+            margin-bottom: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            border-top: 1px solid var(--second-color);
+            color: var(--text-color);
+        }
+
+        .h-4 {
+            height: 4rem;
+        }
+
+        .cols.first {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            /* Dos columnas de igual ancho */
+            gap: 3rem;
+            /* Espacio entre columnas */
+        }
+
+        .first .col {
+            display: flex;
+            background: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .first .col img {
+            height: 20rem;
+            width: auto;
+            border-radius: 0.75rem;
+        }
+
+        .first .col h2 {
+            font-size: 50px;
+            text-align: center;
+        }
+
+        .col li {
+            padding: .25rem;
+        }
+
+        .h-6 {
+            height: 3rem;
+        }
+
+        .col-text {
+            flex-direction: column;
+        }
+
+        .col-text a {
+            background-color: var(--accent-color);
+            margin: 0.5rem;
+            width: 5rem;
+            text-align: center;
+            font-size: 1.125rem;
+            align-items: center;
+            border-radius: 9999px;
+            cursor: pointer;
+            display: inline-flex;
+            font-size: .96rem;
+            font-weight: 700;
+            justify-content: center;
+            line-height: 1.39em;
+            padding: .625rem 1.5rem;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .description {
+            margin: 6px 0 1rem;
+            color: #7f7f7f;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .cols {
+                flex-direction: column;
+                align-items: center;
+                gap: 2rem;
+            }
+
+            .col {
+                width: 100%;
+            }
+
+            .first .col img {
+                height: auto;
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .first .col h2 {
+                font-size: 40px;
+            }
+
+            .cols.first {
+                grid-template-columns: none;
+            }
+
+            .col {
+                margin-bottom: 0;
+                padding-bottom: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1 class="logo">Statvify</h1>
+        <nav>
+            <a href="/">Home</a>
+        </nav>
+
+    </header>
+
+    <main>
+        <div class="cols first">
+            <div class="col col-text">
+                <h2>Spotify Stats & vibes.</h2>
+                <div class="h-6"></div>
+                <a href="../login">8Vinyl</a>
+                <p class="description">Descubre cuáles son tus álbumes más escuchados.</p>
+                <a href="#">Tables</a>
+                <p class="description">Mira las estadísticas de tu cuenta.</p>
+            </div>
+            <div class="col">
+                <img src="assets/img.jpg">
+            </div>
+        </div>
+
+        <div class="h-4"></div>
+        <div class="cols">
+            <div class="col">
+                <h3>Spotify Stats</h3>
+                <li>Muestra las estadísticas más interesantes.</li>
+                <li>Genera una imagen con los álbumes más escuchados.</li>
+            </div>
+
+            <div class="col">
+                <h3>Security</h3>
+                <li>Priorizamos tu privacidad. No recopilamos tu información.</li>
+            </div>
+        </div>
+    </main>
+    <div class="h-4"></div>
+    <footer>
+        &copy; Statvify 2024.
+    </footer>
+</body>
+
+</html>

@@ -15,6 +15,9 @@ const REDIRECT_URI = process.env.NODE_ENV === 'production'
     : process.env.REDIRECT_URI;
 
 const app = express();
+
+app.use(express.static('public'));
+
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -106,7 +109,7 @@ app.get('/8vinyl', (req, res) => {
 app.get('/', (req, res) => {
     const port = PORT || 3000;
     const baseUrl = req.hostname === 'localhost' ? `http://localhost:${port}` : `https://${req.hostname}`;
-    res.redirect(`${baseUrl}/login`);
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 const port = PORT || 3000;
