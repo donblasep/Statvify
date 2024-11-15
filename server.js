@@ -11,7 +11,7 @@ const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, PORT } = process.env;
 
 // Configurar la URI de redirección según el entorno
 const REDIRECT_URI = process.env.NODE_ENV === 'production'
-    ? 'https://tu-vercel-deployment.vercel.app/callback'
+    ? 'https://statvify.onrender.com/callback'
     : process.env.REDIRECT_URI;
 
 const app = express();
