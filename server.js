@@ -21,6 +21,10 @@ app.use(express.static('public'));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Variables para almacenar los álbumes en caché
+let cachedAlbums = null;
+let cacheExpiryTime = 0; // Tiempo de expiración en milisegundos
+
 app.get('/login', (req, res) => {
     const scope = 'user-top-read';
     const authURL = `https://accounts.spotify.com/authorize?client_id=${SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${scope}`;
@@ -61,6 +65,19 @@ app.get('/callback', async (req, res) => {
 });
 
 app.get('/top-albums', async (req, res) => {
+    const now = Date.now();
+
+    // Verificar si hay datos en caché y si no han expirado
+    if (cachedAlbums && now < cacheExpiryTime) {
+        console.log('Usando álbumes de la caché del servidor');
+        
+        // Permitir que los clientes almacenen en caché la respuesta durante 5 minutos (300 segundos)
+        res.set('Cache-Control', 'public, max-age=300');
+        return res.json(cachedAlbums);
+    }
+
+    console.log('Consultando álbumes desde Spotify API');
+
     const accessToken = req.cookies.spotify_token;
 
     if (!accessToken) {
@@ -91,16 +108,22 @@ app.get('/top-albums', async (req, res) => {
             }
         });
 
-        const topAlbums = Array.from(albumsMap.values())
+        cachedAlbums = Array.from(albumsMap.values())
             .sort((a, b) => b.count - a.count)
             .slice(0, 8);
 
-        res.json(topAlbums);
+        cacheExpiryTime = now + 5 * 60 * 1000; // Establecer tiempo de expiración en la caché del servidor (5 minutos)
+
+        // Permitir que los clientes almacenen en caché la respuesta durante 5 minutos (300 segundos)
+        res.set('Cache-Control', 'public, max-age=300');
+        res.json(cachedAlbums);
+        console.log("Datos obtenidos y almacenados en caché");
     } catch (error) {
         console.error('Error obteniendo los álbumes:', error.message);
         res.status(500).json({ error: 'Error al obtener los álbumes' });
     }
 });
+
 
 app.get('/8vinyl', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'vinylfive.html'));

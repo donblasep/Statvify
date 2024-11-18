@@ -100,43 +100,66 @@
         ];
 
         const albumPositions = {
-            1: { x: 125, y: 330 },
-            2: { x: 275, y: 200 },
-            3: { x: 305, y: 350 },
-            4: { x: 145, y: 490 },
-            5: { x: 315, y: 530 },
-            6: { x: 155, y: 670 },
-            7: { x: 175, y: 820 },
-            8: { x: 325, y: 700 }
+            1: { x: 145, y: 280 }, // left (ajustado +40px en x, -50px en y)
+            2: { x: 325, y: 180 }, // right (ajustado +40px en x, -20px en y)
+            3: { x: 365, y: 400 }, // right (ajustado +40px en x, +50px en y)
+            4: { x: 165, y: 540 }, // left (ajustado +40px en x, +50px en y)
+            5: { x: 375, y: 600 }, // right (ajustado +40px en x, +70px en y)
+            6: { x: 185, y: 740 }, // left (ajustado +50px en x, +70px en y)
+            7: { x: 195, y: 920 }, // left (ajustado +50px en x, +100px en y)
+            8: { x: 385, y: 780 }  // right (ajustado +40px en x, +80px en y)
         };
 
+        let cachedAlbums = null; // Variable en memoria para almacenar los álbumes
+        let cacheExpiryTime = 5*60*1000; // Tiempo de expiración en milisegundos
+
         async function fetchTopAlbums() {
+            const now = Date.now();
+
+            // Verificar si hay datos en caché antes de hacer el fetch
+            if (cachedAlbums && now < cacheExpiryTime) {
+                console.log('Usando álbumes de la caché en memoria');
+                drawWrappedCanvas(cachedAlbums);
+                return;
+            }
+
             try {
-                const response = await fetch('/top-albums');
+                const response = await fetch('/top-albums', { cache: 'no-store' });
                 if (!response.ok) {
                     throw new Error('No se pudo obtener los álbumes');
                 }
 
                 const albums = await response.json();
-                const container = document.getElementById('albums-container');
-                container.innerHTML = '';
-
-                albums.forEach((album, index) => {
-                    const albumElement = document.createElement('div');
-                    albumElement.classList.add('album');
-                    albumElement.innerHTML = `
-                        <img src="${album.cover}" alt="${album.name}" loading="lazy">
-                        <div class="album-name">${album.name}</div>
-                        <div class="artist-name">${album.artists}</div>
-                    `;
-                    container.appendChild(albumElement);
-                });
+                cachedAlbums = albums;
+                cacheExpiryTime = now + 5 * 60 * 1000; // Cache por 5 minutos
 
                 drawWrappedCanvas(albums);
             } catch (error) {
                 console.error('Error al obtener los álbumes:', error);
+                if (cachedAlbums) {
+                    drawWrappedCanvas(cachedAlbums);
+                }
             }
         }
+
+        // Función para mostrar los álbumes en la página
+        function renderAlbums(albums) {
+            const container = document.getElementById('albums-container');
+            container.innerHTML = '';
+
+            albums.forEach(album => {
+                const albumElement = document.createElement('div');
+                albumElement.classList.add('album');
+                albumElement.innerHTML = `
+                <img src="${album.cover}" alt="${album.name}" loading="lazy">
+                <div class="album-name">${album.name}</div>
+                <div class="artist-name">${album.artists}</div>
+            `;
+                container.appendChild(albumElement);
+            });
+        }
+
+        window.onload = fetchTopAlbums;
 
         function drawWrappedCanvas(albums) {
             const canvas = document.getElementById('wrappedCanvas');
@@ -162,7 +185,7 @@
             ctx.fillText('Tus clásicos', canvas.width / 2, 150);
 
             const albumSize = 250;
-            const margin = 40; // Margen adicional 
+            const margin = 0; // Margen adicional 
 
             // Dibujar los álbumes con posiciones fijas
             albums.forEach((album, index) => {
