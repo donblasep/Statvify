@@ -40,7 +40,9 @@
         canvas {
             width: 100%;
             height: auto;
-            max-width: 400px;
+            max-width: calc(720px / 2);
+            max-height: calc(1280px / 2);
+            margin: 0 auto;
         }
 
         @media (max-width: 600px) {
@@ -57,16 +59,47 @@
             display: block;
             margin: 1rem auto;
         }
+
+        /* Estilos para el skeleton element */
+        .skeleton {
+            background-color: #444;
+            height: 1280px;
+            width: 720px;
+            margin: 0 auto;
+            animation: pulse 1.5s infinite;
+            border-radius: 8px;
+            /* max-width: 400px; */
+            /* width: 100%; */
+            /* height: auto; */
+            max-width: calc(720px / 2);
+            max-height: calc(1280px / 2);
+        }
+
+        @keyframes pulse {
+            0% {
+                background-color: #444;
+            }
+
+            50% {
+                background-color: #555;
+                /* Color más claro durante la animación */
+            }
+
+            100% {
+                background-color: #444;
+            }
+        }
     </style>
 </head>
 
 <body>
     <h1>Top 8 Álbumes</h1>
-    <div id="albums-container"></div>
-    <canvas id="wrappedCanvas" width="720" height="1280"></canvas>
+
+    <div class="skeleton"></div> <!-- Skeleton element para el canvas -->
+    <canvas id="wrappedCanvas" width="720" height="1280" style="display: none;"></canvas>
+    <!-- Ocultar el canvas inicialmente -->
     <button onclick="downloadCanvas()">Descargar Imagen</button>
     <button onclick="shareCanvas()">Compartir</button>
-
 
     <script>
 
@@ -111,9 +144,14 @@
         };
 
         let cachedAlbums = null; // Variable en memoria para almacenar los álbumes
-        let cacheExpiryTime = 5*60*1000; // Tiempo de expiración en milisegundos
+        let cacheExpiryTime = 5 * 60 * 1000; // Tiempo de expiración en milisegundos
 
         async function fetchTopAlbums() {
+            // Mostrar el skeleton mientras se cargan los álbumes
+            document.querySelector('.skeleton').style.display = 'block';
+            const canvas = document.getElementById('wrappedCanvas');
+            canvas.style.display = 'none'; // Ocultar el canvas
+
             const now = Date.now();
 
             // Verificar si hay datos en caché antes de hacer el fetch
@@ -140,6 +178,10 @@
                     drawWrappedCanvas(cachedAlbums);
                 }
             }
+
+            // Una vez que los álbumes se hayan cargado y procesado
+            document.querySelector('.skeleton').style.display = 'none'; // Ocultar el skeleton
+            canvas.style.display = 'block'; // Mostrar el canvas
         }
 
         // Función para mostrar los álbumes en la página
