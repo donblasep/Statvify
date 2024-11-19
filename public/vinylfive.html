@@ -68,9 +68,6 @@
             margin: 0 auto;
             animation: pulse 1.5s infinite;
             border-radius: 8px;
-            /* max-width: 400px; */
-            /* width: 100%; */
-            /* height: auto; */
             max-width: calc(720px / 2);
             max-height: calc(1280px / 2);
         }
@@ -100,6 +97,17 @@
     <!-- Ocultar el canvas inicialmente -->
     <button onclick="downloadCanvas()">Descargar Imagen</button>
     <button onclick="shareCanvas()">Compartir</button>
+
+    <div id="gradient-panel">
+        <h2>Cambiar Gradiente</h2>
+        <select id="gradient-select" onchange="changeGradient(this.value)">
+            <option value="0">Verde de Spotify</option>
+            <option value="1">Rojo Anaranjado</option>
+            <option value="2">Azul Celeste</option>
+            <option value="3">Negro Oscuro</option>
+            <option value="4">Amarillo</option>
+        </select>
+    </div>
 
     <script>
 
@@ -133,14 +141,14 @@
         ];
 
         const albumPositions = {
-            1: { x: 145, y: 280 }, // left (ajustado +40px en x, -50px en y)
-            2: { x: 325, y: 180 }, // right (ajustado +40px en x, -20px en y)
-            3: { x: 365, y: 400 }, // right (ajustado +40px en x, +50px en y)
-            4: { x: 165, y: 540 }, // left (ajustado +40px en x, +50px en y)
-            5: { x: 375, y: 600 }, // right (ajustado +40px en x, +70px en y)
-            6: { x: 185, y: 740 }, // left (ajustado +50px en x, +70px en y)
-            7: { x: 195, y: 920 }, // left (ajustado +50px en x, +100px en y)
-            8: { x: 385, y: 780 }  // right (ajustado +40px en x, +80px en y)
+            1: { x: 105, y: 280 }, // left (ajustado +40px en x, -50px en y)
+            2: { x: 285, y: 200 }, // right (ajustado +40px en x, -20px en y)
+            3: { x: 325, y: 400 }, // right (ajustado +40px en x, +50px en y)
+            4: { x: 125, y: 520 }, // left (ajustado +40px en x, +50px en y)
+            5: { x: 335, y: 600 }, // right (ajustado +40px en x, +70px en y)
+            6: { x: 145, y: 740 }, // left (ajustado +50px en x, +70px en y)
+            7: { x: 155, y: 920 }, // left (ajustado +50px en x, +100px en y)
+            8: { x: 345, y: 780 }  // right (ajustado +40px en x, +80px en y)
         };
 
         let cachedAlbums = null; // Variable en memoria para almacenar los álbumes
@@ -157,7 +165,7 @@
             // Verificar si hay datos en caché antes de hacer el fetch
             if (cachedAlbums && now < cacheExpiryTime) {
                 console.log('Usando álbumes de la caché en memoria');
-                drawWrappedCanvas(cachedAlbums);
+                drawWrappedCanvas(cachedAlbums, 0);
                 return;
             }
 
@@ -171,11 +179,11 @@
                 cachedAlbums = albums;
                 cacheExpiryTime = now + 5 * 60 * 1000; // Cache por 5 minutos
 
-                drawWrappedCanvas(albums);
+                drawWrappedCanvas(albums, 0);
             } catch (error) {
                 console.error('Error al obtener los álbumes:', error);
                 if (cachedAlbums) {
-                    drawWrappedCanvas(cachedAlbums);
+                    drawWrappedCanvas(cachedAlbums, 0);
                 }
             }
 
@@ -203,25 +211,25 @@
 
         window.onload = fetchTopAlbums;
 
-        function drawWrappedCanvas(albums) {
+        function drawWrappedCanvas(albums, selectedGradientIndex) {
             const canvas = document.getElementById('wrappedCanvas');
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Elegir un gradiente aleatorio de la lista
-            const randomGradient = gradients[Math.floor(Math.random() * gradients.length)];
+            // Obtener el gradiente seleccionado
+            const selectedGradient = gradients[selectedGradientIndex];
 
             // Crear el gradiente
             const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            gradient.addColorStop(0, randomGradient.start);
-            gradient.addColorStop(1, randomGradient.end);
+            gradient.addColorStop(0, selectedGradient.start);
+            gradient.addColorStop(1, selectedGradient.end);
 
             // Aplicar el gradiente al fondo
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             // Título principal
-            ctx.fillStyle = randomGradient.textColor;
+            ctx.fillStyle = selectedGradient.textColor;
             ctx.font = 'bold 60px Monospace';
             ctx.textAlign = 'center';
             ctx.fillText('Tus clásicos', canvas.width / 2, 150);
@@ -255,7 +263,7 @@
 
             let marginText = 50;
             // Texto en el pie del canvas con la URL
-            ctx.fillStyle = randomGradient.textColor;
+            ctx.fillStyle = selectedGradient.textColor;
             ctx.font = 'bold italic 32px Monospace';
             ctx.textAlign = 'right'; // Alineación a la derecha
             ctx.fillText('donblasep.com', canvas.width - marginText, canvas.height - marginText);
@@ -305,6 +313,13 @@
             }
         }
 
+        function changeGradient(selectedIndex) {
+            const canvas = document.getElementById('wrappedCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // Redibujar el canvas con el nuevo gradiente
+            drawWrappedCanvas(cachedAlbums, selectedIndex); // Redibujar con el álbumes y el gradiente seleccionado
+        }
 
     </script>
 </body>
