@@ -56,7 +56,7 @@ app.get('/callback', async (req, res) => {
         });
 
         const port = PORT || 3000;
-        const baseUrl = req.hostname === 'localhost' ? `http://localhost:${port}` : `https://${req.hostname}`;
+        const baseUrl = req.hostname === 'localhost' || req.hostname === '192.168.0.11' ? `http://${req.hostname}:${port}` : `http://${req.hostname}`;
         res.redirect(`${baseUrl}/8vinyl`);
     } catch (error) {
         console.error('Error obteniendo el token:', error.message);

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Top 8 Álbumes</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <style>
         body {
             text-align: center;
@@ -14,13 +15,49 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            transition: background-color 0.5s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        #gradient-panel {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        button {
+            background-color: #1DB954;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        button:hover {
+            background-color: #1AAE3A;
+            transform: translateY(-2px);
         }
 
         #albums-container {
-            margin-bottom: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
         }
 
         .album {
@@ -30,6 +67,11 @@
             text-align: center;
             max-width: 120px;
             flex: 1 1 auto;
+            transition: transform 0.3s ease;
+        }
+
+        .album:hover {
+            transform: scale(1.05);
         }
 
         .album img {
@@ -53,11 +95,6 @@
             canvas {
                 width: 80%;
             }
-        }
-
-        button {
-            display: block;
-            margin: 1rem auto;
         }
 
         /* Estilos para el skeleton element */
@@ -95,8 +132,6 @@
     <div class="skeleton"></div> <!-- Skeleton element para el canvas -->
     <canvas id="wrappedCanvas" width="720" height="1280" style="display: none;"></canvas>
     <!-- Ocultar el canvas inicialmente -->
-    <button onclick="downloadCanvas()">Descargar Imagen</button>
-    <button onclick="shareCanvas()">Compartir</button>
 
     <div id="gradient-panel">
         <h2>Cambiar Gradiente</h2>
@@ -107,7 +142,11 @@
             <option value="3">Negro Oscuro</option>
             <option value="4">Amarillo</option>
         </select>
+        <button onclick="downloadCanvas()">Descargar Imagen</button>
+        <button onclick="shareCanvas()">Compartir</button>
     </div>
+
+    <div id="albums-container"></div> <!-- Contenedor para los álbumes -->
 
     <script>
 
@@ -295,22 +334,13 @@
             const canvas = document.getElementById('wrappedCanvas');
             const imageUrl = canvas.toDataURL('image/png');
 
-            if (navigator.canShare && navigator.canShare({ files: [new File([imageUrl], 'wrapped-2024.png', { type: 'image/png' })] })) {
-                navigator.share({
-                    title: 'Tus clásicos de Spotify',
-                    text: 'Mira mis álbums favoritos!',
-                    files: [new File([imageUrl], 'wrapped-2024.png', { type: 'image/png' })],
-                }).then(() => {
-                    console.log('¡Contenido compartido!');
-                    isSharing = false;  // Marca el fin del proceso de compartir
-                }).catch((error) => {
-                    console.error('Error al compartir:', error);
-                    isSharing = false;  // Marca el fin del proceso de compartir en caso de error
-                });
-            } else {
-                alert('El compartir no es soportado en tu dispositivo.');
-                isSharing = false;  // Marca el fin del proceso de compartir si no es compatible
-            }
+            // Create a link to share on Instagram Stories
+            const instagramShareUrl = `instagram-stories://share?backgroundImage=${encodeURIComponent(imageUrl)}`;
+
+            // Open the Instagram share link
+            window.open(instagramShareUrl, '_blank');
+
+            isSharing = false;  // Marca el fin del proceso de compartir
         }
 
         function changeGradient(selectedIndex) {
